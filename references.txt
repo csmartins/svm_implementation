@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=_PwhiWxHK8o
+http://axon.cs.byu.edu/Dan/678/miscellaneous/SVM.example.pdf
+https://www.dezyre.com/data-science-in-r-programming-tutorial/support-vector-machine-tutorial
+https://www.quora.com/How-does-a-SVM-choose-its-support-vectors
+https://pythonprogramming.net/predictions-svm-machine-learning-tutorial/?completed=/svm-optimization-python-2-machine-learning-tutorial/
+http://tullo.ch/articles/svm-py/
+
+Artificial Inteligence - A modern approach, Stuart Russel and Peter Norvig. Cap 18.9
+Introduction to Machine Learning, Ethem Alaydin. Cap 13
