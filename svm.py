@@ -51,15 +51,47 @@ class SVM:
         fig = plt.figure()
         ax = fig.add_subplot(1,1,1)
         [[ax.scatter(x[0],x[1],s=100,color=colors[i]) for x in self.data_dict[i]] for i in self.data_dict]
+        # [ax.scatter(x[0], x[1], s=100, color='k') for x in self.features]
+        # plt.show()
+
+
+        # pv_1 = (-self.weights[0]*self.support_vectors[0]-self.bias+1) / self.weights[1]
+        # pv_2 = (-self.weights[0]*self.support_vectors[0]-self.bias+1) / self.weights[1]
+        # ax.plot(self.support_vectors, [pv_1], 'k')
+        #
+        # nv_1 = (-self.weights[0]*self.support_vectors[1]-self.bias-1) / self.weights[1]
+        # nv_2 = (-self.weights[0]*self.support_vectors[1]-self.bias-1) / self.weights[1]
+        # ax.plot(self.support_vectors, [nv_1, nv_2], 'k')
+        #
+        # l_1 = (-self.weights[0]*self.support_vectors[0]-self.bias-0) / self.weights[1]
+        # l_2 = (-self.weights[0]*self.support_vectors[1]-self.bias-0) / self.weights[1]
+        # ax.plot(self.support_vectors, [l_1, l_2], 'k')
 
         plt.show()
 
     def predict(self, features):
-        features = np.array(features)
-        dot_product = np.dot(features, self.weights)
-        classification = np.sign(dot_product + self.bias)
+        self.features = np.array(features)
+        classes = []
+        for feat in features:
+            dot_product = np.dot(feat, self.weights)
+            classes.append(np.sign(dot_product + self.bias))
 
-        return classification
+        return classes
 
     def fit(self):
-        multipliers = self.get_lagrange_multipliers(self.X, self.Y)
+        lagrange_multipliers = self.get_lagrange_multipliers(self.X, self.Y)
+        indices = lagrange_multipliers > 1e-5
+        self.weights = lagrange_multipliers[indices]
+        print(self.weights)
+        self.support_vectors = self.X[indices]
+        print(self.support_vectors)
+        self.support_vectors_labels = self.Y[indices]
+        print(self.support_vectors_labels)
+        results = []
+        for (y, x) in zip(self.support_vectors_labels, self.support_vectors):
+            pred = 0
+            for z_i, x_i, y_i in zip(self.weights, self.support_vectors, self.support_vectors_labels):
+                pred += z_i * y_i * self.kernel(x_i, x)
+            results.append(y - pred)
+
+        self.bias = np.mean(results)
