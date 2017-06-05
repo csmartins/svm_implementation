@@ -1,6 +1,10 @@
 import numpy as np
 import numpy.linalg as la
 
+def linear(x,y):
+    x = np.append(x,[1])
+    y = np.append(y,[1])
+    return np.inner(x,y)
 
 class Kernel(object):
     """Implements list of kernels from
@@ -10,7 +14,7 @@ class Kernel(object):
     """
     @staticmethod
     def linear():
-        return lambda x, y: np.inner(x, y)
+        return linear
 
     @staticmethod
     def gaussian(sigma):
