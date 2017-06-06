@@ -20,7 +20,10 @@ def read_dataset(path):
 
         attributes = line.split(',')
         for attribute in attributes[:-1]:
-            sample.append(float(attribute.strip()))
+            try:
+                sample.append(float(attribute.strip()))
+            except ValueError:
+                print "Error reading line: \"{}\"".format(line[:-1])
 
         clazz = int(attributes[-1].strip())
 
