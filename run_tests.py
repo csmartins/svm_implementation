@@ -14,6 +14,8 @@ import math
 from sklearn import svm as scipy_svm
 from sklearn.metrics import accuracy_score
 
+from kernels import Kernel
+import svm as custom_svm
 import dataset_reader
 import k_fold
 
@@ -127,13 +129,22 @@ def scipy_SVM_test_function(X_train, y_train, X_test):
 
     return y_pred
 
+def custom_SVM_test_function(X_train, y_train, X_test):
+    data_dict = dataset_reader.build_data_dict(X_train, y_train)
+
+    svm = custom_svm.SVM(weights=np.array([0.1, 0.2]), bias=0.1, data=data_dict, kernel=Kernel.linear(), c=1)
+
+    y_pred = svm.predict(X_test)
+
+    return y_pred
+
 # Mostra as instruções de uso do programa
 def print_help():
     print "Usage: {} method dataset_path [-v]".format(sys.argv[0])
     print "Methods available: {}".format(METHOD_FUNCTION_DICT.keys())
 
 if __name__ == "__main__":
-    METHOD_FUNCTION_DICT = {'scipy-svm': scipy_SVM_test_function}
+    METHOD_FUNCTION_DICT = {'scipy-svm': scipy_SVM_test_function, 'custom-svm': custom_SVM_test_function}
 
     if len(sys.argv) < 3 or sys.argv[1] not in METHOD_FUNCTION_DICT.keys():
         print_help()
@@ -144,7 +155,7 @@ if __name__ == "__main__":
 
         (X, y) = dataset_reader.read_dataset(dataset_path)
         func = METHOD_FUNCTION_DICT[method]
-        metrics = test_classifier(X, y, scipy_SVM_test_function, verbose=verbose)
+        metrics = test_classifier(X, y, METHOD_FUNCTION_DICT[method], verbose=verbose)
 
         if verbose:
             print ""
