@@ -13,6 +13,7 @@ import math
 
 from sklearn import svm as scipy_svm
 from sklearn.metrics import accuracy_score
+from sklearn import neighbors as scipy_knn
 
 from kernels import Kernel
 import svm as custom_svm
@@ -129,6 +130,14 @@ def scipy_SVM_test_function(X_train, y_train, X_test):
 
     return y_pred
 
+def scipy_KNN_test_function(X_train, y_train, X_test):
+    clf = scipy_knn.KNeighborsClassifier(n_neighbors=5)
+    clf.fit(X_train, y_train)
+
+    y_pred = clf.predict(X_test)
+
+    return y_pred
+
 def custom_SVM_test_function(X_train, y_train, X_test):
     data_dict = dataset_reader.build_data_dict(X_train, y_train)
 
@@ -144,7 +153,7 @@ def print_help():
     print "Methods available: {}".format(METHOD_FUNCTION_DICT.keys())
 
 if __name__ == "__main__":
-    METHOD_FUNCTION_DICT = {'scipy-svm': scipy_SVM_test_function, 'custom-svm': custom_SVM_test_function}
+    METHOD_FUNCTION_DICT = {'scipy-svm': scipy_SVM_test_function, 'knn': scipy_KNN_test_function, 'custom-svm': custom_SVM_test_function}
 
     if len(sys.argv) < 3 or sys.argv[1] not in METHOD_FUNCTION_DICT.keys():
         print_help()
