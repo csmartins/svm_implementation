@@ -20,6 +20,7 @@ class SVM:
             self.Y[i+len_pos] = -1
 
     def get_lagrange_multipliers(self, X, y):
+        print(X.shape)
         n_samples, n_features = X.shape
         K = np.zeros((n_samples, n_samples))
 
@@ -50,14 +51,19 @@ class SVM:
     def fit(self):
         lagrange_multipliers = self.get_lagrange_multipliers(self.X, self.Y)
         # print(lagrange_multipliers)
-        indices = lagrange_multipliers > 1e-5
+        indices = \
+                lagrange_multipliers > 1e-5
+
+
+        print( "Indices: ",indices);
 
         self.weights = lagrange_multipliers[indices]
-        # print(self.weights)
+        print("Weights")
+        print(self.weights)
         self.support_vectors = self.X[indices]
-        # print(self.support_vectors)
+        print(self.support_vectors)
         self.support_vectors_labels = self.Y[indices]
-        #print(self.support_vectors_labels)
+        # print(self.support_vectors_labels)
         results = []
         for (y, x) in zip(self.support_vectors_labels, self.support_vectors):
             pred = self.bias
@@ -69,33 +75,13 @@ class SVM:
         self.bias = np.mean(results)
         print(self.bias)
 
-    def plot(self):
-        colors = {1:'b',-1:'r'}
-        fig = plt.figure()
-        ax = fig.add_subplot(1,1,1)
-        [[ax.scatter(x[0],x[1],s=100,color=colors[i]) for x in self.data_dict[i]] for i in self.data_dict]
-
-        [ax.scatter(x[0],x[1],s=100,color='k') for x in self.test]
-        # pv_1 = (-self.weights[0]*self.support_vectors[0]-self.bias+1) / self.weights[1]
-        # pv_2 = (-self.weights[0]*self.support_vectors[0]-self.bias+1) / self.weights[1]
-        # ax.plot(self.support_vectors, [pv_1], 'k')
-        #
-        # nv_1 = (-self.weights[0]*self.support_vectors[1]-self.bias-1) / self.weights[1]
-        # nv_2 = (-self.weights[0]*self.support_vectors[1]-self.bias-1) / self.weights[1]
-        # ax.plot(self.support_vectors, [nv_1, nv_2], 'k')
-        #
-        # l_1 = (-self.weights[0]*self.support_vectors[0]-self.bias-0) / self.weights[1]
-        # l_2 = (-self.weights[0]*self.support_vectors[1]-self.bias-0) / self.weights[1]
-        # ax.plot(self.support_vectors, [l_1, l_2], 'k')
-
-        plt.show()
-
-    def predict(self, test_data):
-        self.test = np.array(test_data)
-        classes = []
-        for t in self.test:
-            t = [t[0], t[1], 1]
-            dot_product = np.dot(t, self.weights)
-            classes.append(np.sign(dot_product + self.bias))
-
-        return classes
+    def predict(self, x):
+        """
+        Computes the SVM prediction on the given features x.
+        """
+        result = self.bias
+        for z_i, x_i, y_i in zip(self.weights,
+                                 self.support_vectors,
+                                 self.support_vectors_labels):
+            result += z_i * y_i * self.kernel(x_i, x)
+        return np.sign(result).item()
