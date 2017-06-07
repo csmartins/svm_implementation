@@ -141,9 +141,14 @@ def scipy_KNN_test_function(X_train, y_train, X_test):
 def custom_SVM_test_function(X_train, y_train, X_test):
     data_dict = dataset_reader.build_data_dict(X_train, y_train)
 
-    svm = custom_svm.SVM(weights=np.array([0.1, 0.2]), bias=0.1, data=data_dict, kernel=Kernel.linear(), c=1)
+    svm = custom_svm.SVM(data=data_dict, kernel=Kernel.linear(), c=1)
+    svm.fit()
 
-    y_pred = svm.predict(X_test)
+    y_pred = []
+    print(X_test[0])
+
+    for x in X_test:
+        y_pred.append(svm.predict(x))
 
     return y_pred
 

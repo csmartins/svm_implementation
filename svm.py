@@ -20,7 +20,6 @@ class SVM:
             self.Y[i+len_pos] = -1
 
     def get_lagrange_multipliers(self, X, y):
-        print(X.shape)
         n_samples, n_features = X.shape
         K = np.zeros((n_samples, n_samples))
 
@@ -55,13 +54,13 @@ class SVM:
                 lagrange_multipliers > 1e-5
 
 
-        print( "Indices: ",indices);
+        # print( "Indices: ",indices);
 
         self.weights = lagrange_multipliers[indices]
-        print("Weights")
-        print(self.weights)
+        # print("Weights")
+        # print(self.weights)
         self.support_vectors = self.X[indices]
-        print(self.support_vectors)
+        # print(self.support_vectors)
         self.support_vectors_labels = self.Y[indices]
         # print(self.support_vectors_labels)
         results = []
@@ -73,12 +72,9 @@ class SVM:
             results.append(y - pred)
 
         self.bias = np.mean(results)
-        print(self.bias)
+        # print(self.bias)
 
     def predict(self, x):
-        """
-        Computes the SVM prediction on the given features x.
-        """
         result = self.bias
         for z_i, x_i, y_i in zip(self.weights,
                                  self.support_vectors,
